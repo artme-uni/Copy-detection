@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Radar extends Thread {
+public class Radar {
     private static final int INTERVAL = 1000;
-    private static final Long TTL = 10000L;
+    private static final Long TTL = 5000L;
 
     HashMap<SocketAddress, Long> activeCopies = new HashMap<>();
 
@@ -31,20 +31,6 @@ public class Radar extends Thread {
     public void listen() throws IOException {
         searchCopies();
         filterActiveCopies();
-    }
-
-
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                searchCopies();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            filterActiveCopies();
-        }
     }
 
     private void searchCopies() throws IOException {
@@ -81,7 +67,7 @@ public class Radar extends Thread {
     }
 
     private void printActiveCopies() {
-        System.out.println("Active program copies list:");
+        System.out.println("Active copies list:");
         activeCopies.keySet().forEach(System.out::println);
         System.out.println();
     }

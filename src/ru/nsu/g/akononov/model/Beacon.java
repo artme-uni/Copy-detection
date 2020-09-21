@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Date;
 
-public class Beacon extends Thread {
+public class Beacon {
     private static final long INTERVAL = 1000L;
     private long lastSignalTime = 0;
 
@@ -25,18 +25,6 @@ public class Beacon extends Thread {
         if (now - lastSignalTime > INTERVAL) {
             socket.send(packet);
             lastSignalTime = now;
-        }
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                socket.send(packet);
-                Thread.sleep(INTERVAL);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

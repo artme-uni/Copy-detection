@@ -1,9 +1,8 @@
-import ru.nsu.g.akononov.model.Radar;
 import ru.nsu.g.akononov.model.Beacon;
+import ru.nsu.g.akononov.model.Radar;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 
 class Main {
     private static final int PORT = 18201;
@@ -14,12 +13,14 @@ class Main {
 
         try {
             InetAddress inetAddress = InetAddress.getByName(ADDRESS);
-
             Beacon beacon = new Beacon(PASSWORD, inetAddress, PORT);
             Radar radar = new Radar(PASSWORD, inetAddress, PORT);
 
-            beacon.start();
-            radar.start();
+            while (true){
+                beacon.signal();
+                radar.listen();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
