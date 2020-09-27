@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LAN:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LAN_jar</output-path>
+    <root id="archive" name="LAN.jar">
+      <element id="module-output" name="LAN" />
+    </root>
+  </artifact>
+</component>

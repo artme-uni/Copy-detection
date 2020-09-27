@@ -1,11 +1,10 @@
 package ru.nsu.g.akononov.model;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.IOException;
 import java.net.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Radar {
@@ -23,6 +22,22 @@ public class Radar {
             socket = new MulticastSocket(multicastPort);
             socket.joinGroup(groupAddress);
             socket.setSoTimeout(INTERVAL);
+
+            System.setProperty("java.net.preferIPv4Stack", "true");
+            SocketAddress socketAddress = new InetSocketAddress(groupAddress, multicastPort);
+
+            Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+            for (NetworkInterface netIf : Collections.list(nets)) {
+                if(netIf.isUp() && !netIf.isLoopback()) {
+                    try {
+                        socket.joinGroup(socketAddress, netIf);
+                        System.out.println(netIf);
+                    } catch (IOException e){
+                        //e.printStackTrace();
+                    }
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,6 +52,7 @@ public class Radar {
         byte[] buf = new byte[password.getBytes().length];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
+
             socket.receive(packet);
         } catch (SocketTimeoutException ignored){}
 
