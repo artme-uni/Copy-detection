@@ -1,14 +1,12 @@
 package ru.nsu.g.akononov.model;
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Radar {
-    private static final int INTERVAL = 1000;
+    private static final int UPDATE_INTERVAL = 1000;
     private static final Long TTL = 5000L;
 
     HashMap<SocketAddress, Long> activeCopies = new HashMap<>();
@@ -20,24 +18,21 @@ public class Radar {
         this.password = password;
         try {
             socket = new MulticastSocket(multicastPort);
-            socket.joinGroup(groupAddress);
-            socket.setSoTimeout(INTERVAL);
+            socket.setSoTimeout(UPDATE_INTERVAL);
 
-            System.setProperty("java.net.preferIPv4Stack", "true");
             SocketAddress socketAddress = new InetSocketAddress(groupAddress, multicastPort);
 
             Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
             for (NetworkInterface netIf : Collections.list(nets)) {
-                if(netIf.isUp() && !netIf.isLoopback()) {
+                if(netIf.isUp() && !netIf.isLoopback() && netIf.supportsMulticast()) {
                     try {
                         socket.joinGroup(socketAddress, netIf);
-                        System.out.println(netIf);
+                        System.out.println("Listening interface: " + netIf.getName() + "\n");
                     } catch (IOException e){
-                        //e.printStackTrace();
+                        //System.out.println("Cannot join group: " +  e.getMessage());
                     }
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,7 +47,6 @@ public class Radar {
         byte[] buf = new byte[password.getBytes().length];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
-
             socket.receive(packet);
         } catch (SocketTimeoutException ignored){}
 

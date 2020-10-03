@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Enumeration;
 
 public class Beacon {
-    private static final long INTERVAL = 1000L;
+    private static final long SEND_INTERVAL = 500L;
     private long lastSignalTime = 0;
 
     private MulticastSocket socket;
@@ -24,7 +24,7 @@ public class Beacon {
 
     public void signal() throws IOException {
         long now = new Date().getTime();
-        if (now - lastSignalTime > INTERVAL) {
+        if (now - lastSignalTime > SEND_INTERVAL) {
 
             Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
             for (NetworkInterface netIf : Collections.list(nets)) {

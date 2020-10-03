@@ -1,5 +1,4 @@
-import ru.nsu.g.akononov.model.Beacon;
-import ru.nsu.g.akononov.model.Radar;
+package ru.nsu.g.akononov.model;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,7 +11,7 @@ class Main {
     public static void main(String[] args) {
 
         try {
-            InetAddress inetAddress = InetAddress.getByName(ADDRESS);
+            final InetAddress inetAddress = InetAddress.getByName(ADDRESS);
             Beacon beacon = new Beacon(PASSWORD, inetAddress, PORT);
             Radar radar = new Radar(PASSWORD, inetAddress, PORT);
 
@@ -20,7 +19,6 @@ class Main {
                 beacon.signal();
                 radar.listen();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
